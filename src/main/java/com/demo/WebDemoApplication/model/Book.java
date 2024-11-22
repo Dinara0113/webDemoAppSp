@@ -15,6 +15,8 @@ public class Book {
     private String name;
     private String author;
 
+    public Book() {
+    }
     @Override
     public String toString() {
         return "Book{" +
