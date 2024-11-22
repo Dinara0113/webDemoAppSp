@@ -1,0 +1,90 @@
+[1mdiff --git a/build.gradle b/build.gradle[m
+[1mindex 2cc1493..d388c0d 100644[m
+[1m--- a/build.gradle[m
+[1m+++ b/build.gradle[m
+[36m@@ -23,6 +23,9 @@[m [mdependencies {[m
+ 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'[m
+ [m
+ 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'[m
+[32m+[m
+[32m+[m	[32mimplementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '3.3.4'[m
+[32m+[m
+ }[m
+ [m
+ tasks.named('test') {[m
+[1mdiff --git a/src/main/java/com/demo/WebDemoApplication/model/Book.java b/src/main/java/com/demo/WebDemoApplication/model/Book.java[m
+[1mindex d0b619f..ba85548 100644[m
+[1m--- a/src/main/java/com/demo/WebDemoApplication/model/Book.java[m
+[1m+++ b/src/main/java/com/demo/WebDemoApplication/model/Book.java[m
+[36m@@ -1,10 +1,17 @@[m
+ package com.demo.WebDemoApplication.model;[m
+ [m
+[31m-import java.util.Objects;[m
+[32m+[m[32mimport jakarta.persistence.Entity;[m
+[32m+[m[32mimport jakarta.persistence.GeneratedValue;[m
+[32m+[m[32mimport jakarta.persistence.Id;[m
+ [m
+[32m+[m[32mimport java.util.Objects;[m
+[32m+[m[32m@Entity[m
+ public class Book {[m
+ [m
+[32m+[m[32m    @Id[m
+[32m+[m[32m    @GeneratedValue[m
+     private long id;[m
+[32m+[m
+     private String name;[m
+     private String author;[m
+ [m
+[1mdiff --git a/src/main/java/com/demo/WebDemoApplication/repositories/BookRepository.java b/src/main/java/com/demo/WebDemoApplication/repositories/BookRepository.java[m
+[1mnew file mode 100644[m
+[1mindex 0000000..a3b5811[m
+[1m--- /dev/null[m
+[1m+++ b/src/main/java/com/demo/WebDemoApplication/repositories/BookRepository.java[m
+[36m@@ -0,0 +1,8 @@[m
+[32m+[m[32mpackage com.demo.WebDemoApplication.repositories;[m
+[32m+[m
+[32m+[m[32mimport com.demo.WebDemoApplication.model.Book;[m
+[32m+[m[32mimport org.springframework.data.jpa.repository.JpaRepository;[m
+[32m+[m
+[32m+[m[32mpublic interface BookRepository extends JpaRepository<Book, Long> {[m
+[32m+[m
+[32m+[m[32m}[m
+[1mdiff --git a/src/main/java/com/demo/WebDemoApplication/services/BookService.java b/src/main/java/com/demo/WebDemoApplication/services/BookService.java[m
+[1mindex e9b81b7..e4ae93c 100644[m
+[1m--- a/src/main/java/com/demo/WebDemoApplication/services/BookService.java[m
+[1m+++ b/src/main/java/com/demo/WebDemoApplication/services/BookService.java[m
+[36m@@ -1,6 +1,7 @@[m
+ package com.demo.WebDemoApplication.services;[m
+ [m
+ import com.demo.WebDemoApplication.model.Book;[m
+[32m+[m[32mimport com.demo.WebDemoApplication.repositories.BookRepository;[m
+ import org.springframework.stereotype.Service;[m
+ [m
+ import java.util.Collection;[m
+[36m@@ -8,8 +9,12 @@[m [mimport java.util.HashMap;[m
+ [m
+ @Service[m
+ public class BookService {[m
+[31m-    private final HashMap<Long, Book> books = new HashMap<>();[m
+[31m-    private long lastId = 0;[m
+[32m+[m
+[32m+[m[32m    private final BookRepository bookRepository;[m
+[32m+[m
+[32m+[m[32m    public BookService(BookRepository bookRepository) {[m
+[32m+[m[32m        this.bookRepository = bookRepository;[m
+[32m+[m[32m    }[m
+ [m
+     public Book createBook(Book book) {[m
+         book.setId(++lastId);[m
+[1mdiff --git a/src/main/resources/application.properties b/src/main/resources/application.properties[m
+[1mindex f4a8f59..9de5c3b 100644[m
+[1m--- a/src/main/resources/application.properties[m
+[1m+++ b/src/main/resources/application.properties[m
+[36m@@ -1 +1,6 @@[m
+ spring.application.name=WebDemoApplication[m
+[32m+[m[32mspring.datasource.url= jdbc:postgresql://localhost:5432/myDb[m
+[32m+[m[32mspring.datasource.username= myUser[m
+[32m+[m[32mspring.datasource.password= 123[m
+[32m+[m[32m# Hibernate ddl auto (create, create-drop, validate, update)[m
+[32m+[m[32mspring.jpa.hibernate.ddl-auto= update[m
+\ No newline at end of file[m

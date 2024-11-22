@@ -1,13 +1,22 @@
 package com.demo.WebDemoApplication.model;
 
-import java.util.Objects;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
+import java.util.Objects;
+@Entity
 public class Book {
 
+    @Id
+    @GeneratedValue
     private long id;
+
     private String name;
     private String author;
 
+    public Book() {
+    }
     @Override
     public String toString() {
         return "Book{" +
